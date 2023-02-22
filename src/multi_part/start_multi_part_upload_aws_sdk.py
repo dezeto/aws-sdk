@@ -1,5 +1,3 @@
-import os
-
 import boto3
 from botocore.client import Config
 
@@ -14,8 +12,10 @@ s3 = boto3.resource(
     region_name=REGION_NAME,
 )
 
+response = s3.meta.client.create_multipart_upload(
+    Bucket=BUCKET_NAME,
+    Key=KEY_NAME,
+)
 
-with open(f"{os.getcwd()}/files/test", "wb") as data:
-    s3.meta.client.download_file(BUCKET_NAME, KEY_NAME, data.name)
-    data.close()
-    os.unlink(data.name)
+upload_id = response["UploadId"]
+print(f"upload_id: {upload_id}")
